@@ -3,155 +3,46 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Planta 3D — Casa</title>
-<style>
-  :root{color-scheme:light dark}
-  *{box-sizing:border-box}
-  body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#eef2f7;color:#0f172a;overflow:hidden}
-  #app{position:fixed;inset:0}
-  #scene{position:absolute;inset:0}
-  .panel{position:absolute;left:12px;top:12px;z-index:10;width:min(390px,calc(100% - 24px));background:rgba(255,255,255,.95);backdrop-filter:blur(10px);border:1px solid #cbd5e1;border-radius:14px;padding:12px;box-shadow:0 10px 30px rgba(15,23,42,.12)}
-  .title{font-weight:800;font-size:16px;margin-bottom:3px}.sub{font-size:12px;color:#475569;line-height:1.4}
-  .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-  button{border:1px solid #cbd5e1;background:#fff;color:#0f172a;border-radius:9px;padding:9px 11px;font-weight:700;cursor:pointer}
-  button.active{background:#0f172a;color:#fff;border-color:#0f172a}
-  .legend{margin-top:9px;display:grid;grid-template-columns:1fr 1fr;gap:5px;font-size:11px;color:#334155}
-  .dot{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:0}
-  .note{margin-top:9px;padding:8px 9px;border-radius:9px;background:#f8fafc;border:1px solid #e2e8f0;font-size:11px;line-height:1.35;color:#475569}
-  .info{position:absolute;right:12px;bottom:12px;z-index:10;background:rgba(15,23,42,.86);color:#fff;padding:8px 10px;border-radius:10px;font-size:11px;line-height:1.4}
-  @media(max-width:560px){.panel{font-size:13px}.legend{grid-template-columns:1fr}.info{left:12px;right:auto;max-width:calc(100% - 24px)}}
-</style>
+<meta name="theme-color" content="#f5f5f2">
+<title>Casa — Estudo Arquitetônico 3D</title>
+<link rel="stylesheet" href="./styles.css">
 </head>
 <body>
 <div id="app">
   <div id="scene"></div>
-  <div class="panel">
-    <div class="title">Planta 3D — revisão pelo vídeo</div>
-    <div class="sub">Base da planta enviada + informações extraídas da narração do vídeo. Pé-direito 3,00 m; cobertura em fibrocimento branco.</div>
+  <section class="panel" aria-label="Controles da planta 3D">
+    <div class="title">Casa — estudo arquitetônico 3D</div>
+    <div class="sub">Planta-base preservada. Revisão arquitetônica com dados do vídeo e acabamentos definidos: reboco grego branco, piso claro, forro branco liso, madeira e detalhes em cobre.</div>
     <div class="row">
-      <button id="btn3d" class="active">3D</button>
-      <button id="btnTop">Vista superior</button>
-      <button id="btnRoof">Telhado</button>
-      <button id="btnWalls" class="active">Paredes</button>
-      <button id="btnInfra" class="active">Infraestrutura</button>
-      <button id="btnReset">Centralizar</button>
+      <button id="view3d" class="active">3D</button>
+      <button id="viewTop">Superior</button>
+      <button id="viewFront">Frente</button>
+      <button id="viewInside">Interior</button>
+    </div>
+    <div class="row">
+      <button id="toggleRoof">Telhado</button>
+      <button id="toggleWalls" class="active">Paredes</button>
+      <button id="toggleInfra" class="active">Infra</button>
+      <button id="toggleFurniture" class="active">Móveis</button>
+      <button id="toggleLabels" class="active">Rótulos</button>
+      <button id="toggleCeiling">Forro</button>
+      <button id="toggleLights">Luz interna</button>
     </div>
     <div class="legend">
-      <span><i class="dot" style="background:#edd3ad"></i>Sala / cozinha</span>
-      <span><i class="dot" style="background:#79d1c2"></i>Quarto menor</span>
-      <span><i class="dot" style="background:#eebeb8"></i>Suíte maior</span>
-      <span><i class="dot" style="background:#b7b4c4"></i>Banheiros</span>
-      <span><i class="dot" style="background:#a6a594"></i>Lavanderia / varanda</span>
-      <span><i class="dot" style="background:#9ca3af"></i>Garagem</span>
-      <span><i class="dot" style="background:#38bdf8"></i>Cisterna</span>
-      <span><i class="dot" style="background:#a78bfa"></i>Fossas</span>
+      <span><i class="dot" style="background:#e7dccb"></i>Sala / cozinha</span>
+      <span><i class="dot" style="background:#e7c4bc"></i>Suíte maior</span>
+      <span><i class="dot" style="background:#a9d7cf"></i>Quarto menor</span>
+      <span><i class="dot" style="background:#c9c5d2"></i>Banheiros</span>
+      <span><i class="dot" style="background:#bbb8a5"></i>Lavanderia</span>
+      <span><i class="dot" style="background:#a9d2ad"></i>Jardim interno</span>
+      <span><i class="dot" style="background:#a7adb6"></i>Garagem</span>
+      <span><i class="dot" style="background:#67aadd"></i>Cisterna</span>
     </div>
-    <div class="note">Vídeo: entrada principal e portão na frente; garagem coberta junto à cisterna; 2 fossas; acesso individual; suíte maior; jardim de inverno com juazeiro; sala/cozinha integradas; quarto menor; minidispensa; lavanderia.</div>
-  </div>
-  <div class="info">Arraste para girar • pinça/roda para zoom • dois dedos/botão direito para mover</div>
+    <div class="note"><strong>Conceito:</strong> contemporâneo clean, branco predominante, reboco grego como textura principal, piso claro fosco, madeira média para aquecer os ambientes e cobre usado pontualmente. Banheiros com apenas uma parede de pastilhas, sem box de vidro, cuba de sobrepor e torneira de cobre.</div>
+    <div id="selection" class="selection">Toque em um ambiente ou elemento para identificar.</div>
+  </section>
+  <div class="help">Arraste para girar • pinça/roda para zoom • dois dedos/botão direito para mover</div>
 </div>
-<script type="importmap">
-{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.186.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.186.0/examples/jsm/"}}
-</script>
-<script type="module">
-import * as THREE from 'three';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-
-const mount=document.getElementById('scene');
-const scene=new THREE.Scene();
-scene.background=new THREE.Color(0xeef2f7);
-const camera=new THREE.PerspectiveCamera(42,innerWidth/innerHeight,.1,150);
-camera.position.set(23,24,24);
-const renderer=new THREE.WebGLRenderer({antialias:true});
-renderer.setPixelRatio(Math.min(devicePixelRatio,2));
-renderer.setSize(innerWidth,innerHeight);
-renderer.shadowMap.enabled=true;
-renderer.shadowMap.type=THREE.PCFSoftShadowMap;
-renderer.outputColorSpace=THREE.SRGBColorSpace;
-mount.appendChild(renderer.domElement);
-
-const controls=new OrbitControls(camera,renderer.domElement);
-controls.enableDamping=true;controls.dampingFactor=.07;controls.target.set(12.5,0,4.8);
-controls.minDistance=7;controls.maxDistance=70;controls.maxPolarAngle=Math.PI*.49;
-scene.add(new THREE.HemisphereLight(0xffffff,0x64748b,2.2));
-const sun=new THREE.DirectionalLight(0xffffff,2.5);sun.position.set(8,24,10);sun.castShadow=true;
-sun.shadow.mapSize.set(2048,2048);sun.shadow.camera.left=-25;sun.shadow.camera.right=25;sun.shadow.camera.top=25;sun.shadow.camera.bottom=-25;scene.add(sun);
-
-const world=new THREE.Group();scene.add(world);
-const floors=new THREE.Group();world.add(floors);
-const walls=new THREE.Group();world.add(walls);
-const roof=new THREE.Group();world.add(roof);
-const infra=new THREE.Group();world.add(infra);
-
-const sx=25.54/(1338-95), sy=8.69/(727-279), ox=95, oy=727;
-const X=p=>(p-ox)*sx, Z=p=>(oy-p)*sy;
-
-const lotPts=[[95,726],[83,280],[1320,184],[1338,680]].map(([x,y])=>new THREE.Vector2(X(x),Z(y)));
-const lotShape=new THREE.Shape(lotPts);const lotGeo=new THREE.ShapeGeometry(lotShape);lotGeo.rotateX(-Math.PI/2);
-const lot=new THREE.Mesh(lotGeo,new THREE.MeshStandardMaterial({color:0xa7d7af,roughness:1}));lot.receiveShadow=true;lot.position.y=-.03;world.add(lot);
-
-function floorRect(name,x1,y1,x2,y2,color){const w=X(x2)-X(x1),d=Z(y1)-Z(y2);const o=new THREE.Mesh(new THREE.BoxGeometry(w,.055,d),new THREE.MeshStandardMaterial({color,roughness:.92}));o.name=name;o.position.set((X(x1)+X(x2))/2,.02,(Z(y1)+Z(y2))/2);o.receiveShadow=true;floors.add(o);return o}
-function floorPoly(name,pts,color){const s=new THREE.Shape(pts.map(([x,y])=>new THREE.Vector2(X(x),Z(y))));const g=new THREE.ShapeGeometry(s);g.rotateX(-Math.PI/2);const o=new THREE.Mesh(g,new THREE.MeshStandardMaterial({color,roughness:.92}));o.name=name;o.position.y=.025;o.receiveShadow=true;floors.add(o);return o}
-
-floorRect('Lavanderia / varanda',280,269,369,628,0xa6a594);
-floorRect('Banheiro social',280,628,402,699,0xb7b4c4);
-floorRect('Quarto menor',433,269,612,410,0x79d1c2);
-floorRect('Suíte maior',612,269,853,428,0xeebeb8);
-floorRect('Banheiro suíte',853,269,952,412,0xb7b4c4);
-floorPoly('Sala e cozinha',[[369,269],[433,269],[433,410],[612,410],[612,510],[813,510],[813,699],[402,699],[402,628],[369,628]],0xedd3ad);
-floorPoly('Jardim de inverno',[[612,428],[853,428],[853,699],[813,699],[813,510],[612,510]],0x9bd38f);
-const garagem=floorRect('Garagem coberta',1032,240,1324,445,0x9ca3af);
-
-const H=3,T=.14;
-function wallSeg(x1,y1,x2,y2,h=H){const ax=X(x1),az=Z(y1),bx=X(x2),bz=Z(y2);const dx=bx-ax,dz=bz-az,len=Math.hypot(dx,dz);const o=new THREE.Mesh(new THREE.BoxGeometry(len,h,T),new THREE.MeshStandardMaterial({color:0xf8fafc,roughness:.88}));o.position.set((ax+bx)/2,h/2,(az+bz)/2);o.rotation.y=-Math.atan2(dz,dx);o.castShadow=true;o.receiveShadow=true;walls.add(o);return o}
-[[280,269,952,269],[280,269,280,699],[280,699,853,699],[952,269,952,412],[853,269,853,412],[853,428,853,699],[369,269,369,628],[402,628,402,699],[280,628,402,628],[433,269,433,410],[433,410,612,410],[612,269,612,510],[612,428,853,428],[612,510,813,510],[813,510,813,699],[853,412,952,412]].forEach(v=>wallSeg(...v));
-
-function markerLine(x1,y1,x2,y2,color=0x334155){const ax=X(x1),az=Z(y1),bx=X(x2),bz=Z(y2),len=Math.hypot(bx-ax,bz-az);const o=new THREE.Mesh(new THREE.BoxGeometry(len,.025,.06),new THREE.MeshBasicMaterial({color}));o.position.set((ax+bx)/2,.08,(az+bz)/2);o.rotation.y=-Math.atan2(bz-az,bx-ax);world.add(o)}
-markerLine(350,330,369,330);markerLine(540,410,580,410);markerLine(790,428,830,428);markerLine(813,545,813,585);markerLine(390,628,402,650);
-
-// Infraestrutura externa informada no vídeo
-function cylinderAt(name,x,y,diameter,height,color,transparent=false){const g=new THREE.CylinderGeometry(diameter/2,diameter/2,height,40);const m=new THREE.MeshStandardMaterial({color,roughness:.75,transparent,opacity:transparent?.52:1});const o=new THREE.Mesh(g,m);o.name=name;o.position.set(X(x),height/2,Z(y));o.castShadow=true;o.receiveShadow=true;infra.add(o);return o}
-// Cisterna: 2,00 m de diâmetro útil e 2,47 m de altura, próxima à garagem/entrada
-const cisterna=cylinderAt('Cisterna Ø2,00 x 2,47 m',1135,385,2.0,2.47,0x38bdf8,true);
-// Fossas: diâmetros informados pelo usuário
-const fossaA=cylinderAt('Fossa A Ø1,50 m',990,570,1.5,.35,0xa78bfa,true);
-const fossaD=cylinderAt('Fossa D Ø1,20 m',1025,470,1.2,.35,0x8b5cf6,true);
-
-// pilares da futura cobertura da garagem
-function post(x,y){const o=new THREE.Mesh(new THREE.BoxGeometry(.18,2.7,.18),new THREE.MeshStandardMaterial({color:0xd1d5db,roughness:.8}));o.position.set(X(x),1.35,Z(y));o.castShadow=true;infra.add(o)}
-[[1045,252],[1180,252],[1310,252],[1045,432],[1180,432],[1310,432]].forEach(([x,y])=>post(x,y));
-
-// portão principal e portão social na frente
-function gate(x1,y1,x2,y2,h,color){const ax=X(x1),az=Z(y1),bx=X(x2),bz=Z(y2),len=Math.hypot(bx-ax,bz-az);const o=new THREE.Mesh(new THREE.BoxGeometry(len,h,.09),new THREE.MeshStandardMaterial({color,metalness:.35,roughness:.55}));o.position.set((ax+bx)/2,h/2,(az+bz)/2);o.rotation.y=-Math.atan2(bz-az,bx-ax);infra.add(o)}
-gate(1160,215,1285,205,1.8,0x475569);gate(1095,220,1135,217,1.65,0x64748b);
-
-// árvore/juazeiro esquemático no jardim de inverno
-function tree(x,y){const trunk=new THREE.Mesh(new THREE.CylinderGeometry(.09,.12,1.25,12),new THREE.MeshStandardMaterial({color:0x8b5e3c}));trunk.position.set(X(x),.63,Z(y));infra.add(trunk);const crown=new THREE.Mesh(new THREE.SphereGeometry(.8,16,12),new THREE.MeshStandardMaterial({color:0x4f8a58,roughness:1}));crown.position.set(X(x),1.65,Z(y));infra.add(crown)}
-tree(730,555);
-
-// cobertura principal branca em fibrocimento
-const roofMat=new THREE.MeshStandardMaterial({color:0xf8fafc,roughness:.62,metalness:.03,side:THREE.DoubleSide,transparent:true,opacity:.92});
-const rx1=X(270),rx2=X(962),rz1=Z(258),rz2=Z(710);const rw=rx2-rx1,rd=rz1-rz2;
-const ro=new THREE.Mesh(new THREE.BoxGeometry(rw,.08,rd),roofMat);ro.position.set((rx1+rx2)/2,H+.20,(rz1+rz2)/2);ro.rotation.z=THREE.MathUtils.degToRad(1.7);ro.castShadow=true;roof.add(ro);
-// cobertura da garagem
-const gx1=X(1018),gx2=X(1332),gz1=Z(230),gz2=Z(456);const groof=new THREE.Mesh(new THREE.BoxGeometry(gx2-gx1,.08,gz1-gz2),roofMat.clone());groof.position.set((gx1+gx2)/2,2.84,(gz1+gz2)/2);groof.rotation.z=THREE.MathUtils.degToRad(1.2);groof.castShadow=true;roof.add(groof);
-roof.visible=false;
-
-const grid=new THREE.GridHelper(34,34,0x64748b,0xcbd5e1);grid.position.set(12.5,-.06,5);world.add(grid);
-
-function label(text,x,y,scale=2.5){const c=document.createElement('canvas');c.width=640;c.height=128;const ctx=c.getContext('2d');ctx.fillStyle='rgba(15,23,42,.80)';ctx.fillRect(8,22,624,84);ctx.fillStyle='#fff';ctx.font='700 32px system-ui';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(text,320,64);const tex=new THREE.CanvasTexture(c);tex.colorSpace=THREE.SRGBColorSpace;const s=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,transparent:true,depthTest:false}));s.position.set(X(x),.24,Z(y));s.scale.set(scale,.58,1);world.add(s)}
-label('LAVANDERIA',325,455,2.2);label('QUARTO MENOR',525,345,2.2);label('SUÍTE MAIOR',733,350,2.2);label('BANHEIRO SUÍTE',902,340,2.1);label('SALA / COZINHA',585,575,2.4);label('BANHEIRO SOCIAL',340,662,2.1);label('JARDIM DE INVERNO',730,555,2.35);label('GARAGEM',1170,320,2.0);label('CISTERNA',1135,385,1.7);label('FOSSA A',990,570,1.4);label('FOSSA D',1025,470,1.4);
-
-function set3d(){camera.fov=42;camera.updateProjectionMatrix();camera.position.set(23,24,24);controls.target.set(12.5,0,4.8);controls.update();btn3d.classList.add('active');btnTop.classList.remove('active')}
-function setTop(){camera.position.set(12.5,35,4.8);controls.target.set(12.5,0,4.8);controls.update();btnTop.classList.add('active');btn3d.classList.remove('active')}
-const btn3d=document.getElementById('btn3d'),btnTop=document.getElementById('btnTop');
-btn3d.addEventListener('click',set3d);btnTop.addEventListener('click',setTop);
-document.getElementById('btnRoof').addEventListener('click',e=>{roof.visible=!roof.visible;e.currentTarget.classList.toggle('active',roof.visible)});
-document.getElementById('btnWalls').addEventListener('click',e=>{walls.visible=!walls.visible;e.currentTarget.classList.toggle('active',walls.visible)});
-document.getElementById('btnInfra').addEventListener('click',e=>{infra.visible=!infra.visible;e.currentTarget.classList.toggle('active',infra.visible)});
-document.getElementById('btnReset').addEventListener('click',set3d);
-addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
-renderer.setAnimationLoop(()=>{controls.update();renderer.render(scene,camera)});
-</script>
+<script type="module" src="./app.js"></script>
 </body>
 </html>
