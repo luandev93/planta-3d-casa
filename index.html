@@ -5,41 +5,45 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f5f5f2">
 <title>Casa — Estudo Arquitetônico 3D</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2214%22 fill=%22%23264b72%22/><path d=%22M11 31 32 13l21 18v21H39V38H25v14H11Z%22 fill=%22white%22/></svg>">
 <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
 <div id="app">
   <div id="scene"></div>
   <section class="panel" aria-label="Controles da planta 3D">
-    <div class="title">Casa — estudo arquitetônico 3D</div>
-    <div class="sub">Planta-base preservada. Revisão arquitetônica com dados do vídeo e acabamentos definidos: reboco grego branco, piso claro, forro branco liso, madeira e detalhes em cobre.</div>
-    <div class="row">
-      <button id="view3d" class="active">3D</button>
-      <button id="viewTop">Superior</button>
-      <button id="viewFront">Frente</button>
-      <button id="viewInside">Interior</button>
+    <button id="collapsePanel" class="collapse" aria-label="Recolher painel" title="Recolher painel">‹</button>
+    <div class="panelContent">
+      <div class="title">Casa — estudo arquitetônico 3D</div>
+      <div class="sub">Planta-base preservada. Revisão arquitetônica com dados do vídeo e acabamentos definidos: reboco grego branco, piso claro, forro branco liso, madeira e detalhes em cobre.</div>
+      <div class="row">
+        <button id="view3d" class="active">3D</button>
+        <button id="viewTop">Superior</button>
+        <button id="viewFront">Frente</button>
+        <button id="viewInside">Interior</button>
+      </div>
+      <div class="row">
+        <button id="toggleRoof">Telhado</button>
+        <button id="toggleWalls" class="active">Paredes</button>
+        <button id="toggleInfra" class="active">Infra</button>
+        <button id="toggleFurniture" class="active">Móveis</button>
+        <button id="toggleLabels" class="active">Rótulos</button>
+        <button id="toggleCeiling">Forro</button>
+        <button id="toggleLights">Luz interna</button>
+      </div>
+      <div class="legend">
+        <span><i class="dot" style="background:#e7dccb"></i>Sala / cozinha</span>
+        <span><i class="dot" style="background:#e7c4bc"></i>Suíte maior</span>
+        <span><i class="dot" style="background:#a9d7cf"></i>Quarto menor</span>
+        <span><i class="dot" style="background:#c9c5d2"></i>Banheiros</span>
+        <span><i class="dot" style="background:#bbb8a5"></i>Lavanderia</span>
+        <span><i class="dot" style="background:#a9d2ad"></i>Jardim interno</span>
+        <span><i class="dot" style="background:#a7adb6"></i>Garagem</span>
+        <span><i class="dot" style="background:#67aadd"></i>Cisterna</span>
+      </div>
+      <div class="note"><strong>Conceito:</strong> contemporâneo clean, branco predominante, reboco grego como textura principal, piso claro fosco, madeira média para aquecer os ambientes e cobre usado pontualmente. Banheiros com apenas uma parede de pastilhas, sem box de vidro, cuba de sobrepor e torneira de cobre.</div>
+      <div id="selection" class="selection">Toque em um ambiente ou elemento para identificar.</div>
     </div>
-    <div class="row">
-      <button id="toggleRoof">Telhado</button>
-      <button id="toggleWalls" class="active">Paredes</button>
-      <button id="toggleInfra" class="active">Infra</button>
-      <button id="toggleFurniture" class="active">Móveis</button>
-      <button id="toggleLabels" class="active">Rótulos</button>
-      <button id="toggleCeiling">Forro</button>
-      <button id="toggleLights">Luz interna</button>
-    </div>
-    <div class="legend">
-      <span><i class="dot" style="background:#e7dccb"></i>Sala / cozinha</span>
-      <span><i class="dot" style="background:#e7c4bc"></i>Suíte maior</span>
-      <span><i class="dot" style="background:#a9d7cf"></i>Quarto menor</span>
-      <span><i class="dot" style="background:#c9c5d2"></i>Banheiros</span>
-      <span><i class="dot" style="background:#bbb8a5"></i>Lavanderia</span>
-      <span><i class="dot" style="background:#a9d2ad"></i>Jardim interno</span>
-      <span><i class="dot" style="background:#a7adb6"></i>Garagem</span>
-      <span><i class="dot" style="background:#67aadd"></i>Cisterna</span>
-    </div>
-    <div class="note"><strong>Conceito:</strong> contemporâneo clean, branco predominante, reboco grego como textura principal, piso claro fosco, madeira média para aquecer os ambientes e cobre usado pontualmente. Banheiros com apenas uma parede de pastilhas, sem box de vidro, cuba de sobrepor e torneira de cobre.</div>
-    <div id="selection" class="selection">Toque em um ambiente ou elemento para identificar.</div>
   </section>
   <div class="help">Arraste para girar • pinça/roda para zoom • dois dedos/botão direito para mover</div>
 </div>
@@ -52,5 +56,18 @@
 }
 </script>
 <script type="module" src="./app.js"></script>
+<script>
+window.addEventListener('load',()=>{
+  const labels=document.getElementById('toggleLabels');
+  if(labels?.classList.contains('active')) labels.click();
+  const panel=document.querySelector('.panel');
+  const collapse=document.getElementById('collapsePanel');
+  collapse?.addEventListener('click',()=>{
+    const collapsed=panel.classList.toggle('collapsed');
+    collapse.textContent=collapsed?'›':'‹';
+    collapse.setAttribute('aria-label',collapsed?'Expandir painel':'Recolher painel');
+  });
+});
+</script>
 </body>
 </html>
