@@ -25,9 +25,21 @@ A geometria, implantação e proporções devem seguir a planta 2D. As cotas vis
 
 O contorno do lote é trapezoidal e foi mantido. A casa não foi reposicionada para “ficar mais bonita”.
 
+## Decisões externas confirmadas
+
+- o **fundo menor** passa a funcionar como **área gourmet coberta**;
+- a área gourmet possui piso próprio, bancada, churrasqueira, cuba e mesa compacta;
+- a **garagem frontal permanece coberta**;
+- a garagem recebe uma **faixa central cimentada**, mantendo as laterais permeáveis;
+- existe um **portão veicular** alinhado com a garagem;
+- existe um **portão principal de pedestres**;
+- foi criado um **caminho de aproximadamente 1,10 m de largura** do portão principal até a porta de entrada, com patamar final e balizadores baixos.
+
+Esses elementos externos foram incluídos após definição expressa do proprietário e, portanto, deixam de ser tratados como elementos presumidos.
+
 ## O que foi removido da versão anterior
 
-Elementos que não aparecem na planta 2D atual foram retirados da reconstrução geométrica, incluindo cisterna, fossas e portões presumidos. Esses itens só devem voltar quando houver uma referência dimensional clara.
+Elementos sem referência suficiente na planta 2D atual continuam fora da reconstrução, incluindo cisterna e fossas. Só devem voltar quando houver uma referência dimensional clara.
 
 ## Acabamentos já definidos
 
