@@ -2,6 +2,14 @@
 
 Modelo 3D interativo reconstruído diretamente sobre a planta 2D enviada em 17/09/2026.
 
+## Visualização online
+
+A hospedagem oficial deste projeto é feita pelo Render, com deploy automático a cada atualização da branch `main`.
+
+**Visualizador 3D:** https://planta-3d-casa.onrender.com
+
+O GitHub Pages não é usado neste projeto, pois a criação automática do site Pages foi bloqueada pela permissão da integração do GitHub. O workflow correspondente foi removido para evitar falhas e links 404.
+
 ## Fonte geométrica principal
 
 A geometria, implantação e proporções devem seguir a planta 2D. As cotas visíveis usadas como âncoras são:
