@@ -1,61 +1,54 @@
 # Planta 3D da casa
 
-Modelo 3D interativo construído a partir da planta-base enviada e refinado com informações extraídas do vídeo da obra.
+Modelo 3D interativo reconstruído diretamente sobre a planta 2D enviada em 17/09/2026.
 
-## Fontes do projeto
+## Fonte geométrica principal
 
-1. **Planta-base**: fonte principal para a geometria e distribuição dos ambientes.
-2. **Vídeo da obra**: usado para interpretar entrada, garagem, cisterna, fossas, acessos e função dos ambientes.
-3. **Definições do proprietário**: acabamentos, mobiliário e preferências visuais.
+A geometria, implantação e proporções devem seguir a planta 2D. As cotas visíveis usadas como âncoras são:
 
-## Definições confirmadas
+- terreno: **25,54 m** no comprimento inferior;
+- lateral esquerda: **8,69 m**;
+- lateral direita: **11,07 m**;
+- garagem/área coberta: **4,00 × 5,60 m**;
+- varanda/lavanderia: **12,3 m²**;
+- banheiro social: **3,1 m²**;
+- sala de estar/cozinha/jantar integradas conforme desenho;
+- quarto infantil, quarto principal, banheiro da suíte e pátio interno nas posições da planta.
 
-- Pé-direito: **3,00 m**.
-- Cobertura: **fibrocimento pintado de branco**.
-- Forro: **isopor**, posteriormente uniformizado com **massa corrida branca**.
-- Paredes: predominância de **reboco grego branco**.
-- Piso: **claro**, com leitura fosca no estudo 3D.
-- Banheiros: **uma parede de pastilhas**, **sem box de vidro**, **cuba de sobrepor** e **torneira de cobre**.
-- Sala/cozinha: conceito aberto.
-- Mesa: **madeira, 6 lugares**.
-- Quarto menor: **duas beliches**.
-- Jardim de inverno: **juazeiro**.
-- Cisterna: **Ø 2,00 m útil × 2,47 m de altura**.
-- Fossas: **Ø 1,50 m** e **Ø 1,20 m**.
-- Garagem coberta na área de entrada.
-- Portão principal e acesso social individual.
+O contorno do lote é trapezoidal e foi mantido. A casa não foi reposicionada para “ficar mais bonita”.
 
-## Propostas arquitetônicas aplicadas no estudo
+## O que foi removido da versão anterior
 
-Estas opções são sugestões e podem ser alteradas durante os retoques:
+Elementos que não aparecem na planta 2D atual foram retirados da reconstrução geométrica, incluindo cisterna, fossas e portões presumidos. Esses itens só devem voltar quando houver uma referência dimensional clara.
 
-- linguagem **contemporânea clean**;
-- madeira média para equilibrar a predominância do branco;
-- cobre apenas como detalhe, evitando excesso;
-- sofá neutro e rack baixo na sala;
-- cama queen e criados compactos na suíte;
-- cozinha linear com armários inferiores em madeira, superiores brancos e bancada clara;
-- iluminação interna quente/neutra;
-- forro liso sem recortes excessivos.
+## Acabamentos já definidos
 
-## Visualização
+- pé-direito de estudo: **3,00 m**;
+- paredes em **reboco grego branco**;
+- piso claro fosco;
+- forro de isopor posteriormente uniformizado com massa corrida branca;
+- mesa de madeira com 6 lugares;
+- quarto infantil com duas beliches;
+- cuba de sobrepor e torneira de cobre nos banheiros;
+- linguagem contemporânea clean.
 
-O modelo possui controles de:
+O mobiliário é apenas referência espacial e pode ser refinado depois sem alterar as paredes.
+
+## Recursos do visualizador
 
 - vista 3D;
 - vista superior;
-- fachada/frente;
+- vista de frente;
 - câmera interior;
-- paredes;
-- telhado;
-- infraestrutura;
-- mobiliário;
-- rótulos;
-- forro;
-- iluminação interna.
-
-Os elementos podem ser tocados/clicados para identificação.
+- exibir/ocultar cobertura;
+- exibir/ocultar paredes;
+- exibir/ocultar elementos auxiliares;
+- exibir/ocultar móveis;
+- exibir/ocultar rótulos;
+- exibir/ocultar forro;
+- iluminação interna opcional;
+- identificação de ambientes e elementos por clique/toque.
 
 ## Regra de revisão
 
-A geometria da planta-base deve ser preservada. O vídeo e as decisões posteriores servem para refinar uso, acabamento, mobiliário e posição relativa de elementos externos sem reimplantar a casa arbitrariamente.
+A planta 2D é a fonte de verdade para geometria. Qualquer vídeo, fotografia ou decisão posterior serve para detalhar altura, acabamento, esquadrias, mobiliário e elementos externos sem alterar arbitrariamente a implantação.
