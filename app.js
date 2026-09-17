@@ -107,6 +107,9 @@ const darkWoodMat = new THREE.MeshStandardMaterial({ color: 0x6c4d36, roughness:
 const metalMat = new THREE.MeshStandardMaterial({ color: 0x737b82, metalness: 0.62, roughness: 0.42 });
 const copperMat = new THREE.MeshStandardMaterial({ color: 0xb56e41, metalness: 0.72, roughness: 0.3 });
 const glassMat = new THREE.MeshPhysicalMaterial({ color: 0xc8e0e8, transparent: true, opacity: 0.32, roughness: 0.15, transmission: 0.3, side: THREE.DoubleSide });
+const concreteMat = new THREE.MeshStandardMaterial({ color: 0xbdbbb5, roughness: 0.96 });
+const pathMat = new THREE.MeshStandardMaterial({ color: 0xd7d1c6, roughness: 0.9 });
+const charcoalMat = new THREE.MeshStandardMaterial({ color: 0x303337, roughness: 0.84 });
 
 function roomMaterial(color) {
   return new THREE.MeshStandardMaterial({ color, map: floorTex, roughness: 0.93 });
@@ -148,6 +151,21 @@ function floorPoly(name, pts, color) {
   return o;
 }
 
+function groundRect(name, x1, y1, x2, y2, material, y = 0.055, parent = details) {
+  const w = X(x2) - X(x1);
+  const d = Z(y1) - Z(y2);
+  const o = meshBox(parent, w, 0.045, d, material, (X(x1) + X(x2)) / 2, y, (Z(y1) + Z(y2)) / 2, name, 'pavimentação');
+  return o;
+}
+
+function groundStrip(x1, y1, x2, y2, width, material, name = 'Caminho de acesso') {
+  const a = P(x1, y1), b = P(x2, y2);
+  const len = Math.hypot(b.x - a.x, b.z - a.z);
+  const o = meshBox(details, len, 0.045, width, material, (a.x + b.x) / 2, 0.065, (a.z + b.z) / 2, name, 'acesso');
+  o.rotation.y = -Math.atan2(b.z - a.z, b.x - a.x);
+  return o;
+}
+
 // Terreno exatamente na orientação trapezoidal indicada na planta.
 const lotPts = [[95, 726], [83, 280], [1320, 184], [1338, 680]].map(([x, y]) => new THREE.Vector2(X(x), Z(y)));
 const lotShape = new THREE.Shape(lotPts);
@@ -168,8 +186,10 @@ floorRect('Quarto', 612, 269, 853, 428, 0xeac7c1);
 floorRect('Banheiro da suíte', 853, 269, 952, 412, 0xc9c6d2);
 floorPoly('Sala de estar / cozinha / jantar — ambiente integrado', [[369,269],[433,269],[433,410],[612,410],[612,510],[813,510],[813,699],[402,699],[402,628],[369,628]], 0xeadbc7);
 floorPoly('Pátio interno / área ao ar livre', [[612,428],[853,428],[853,699],[813,699],[813,510],[612,510]], 0xa9d2ad);
-floorPoly('Área externa esquerda', [[95,726],[83,280],[280,269],[280,699]], 0xa9d0aa);
-floorRect('Garagem / área coberta — 4,00 × 5,60 m', 1124, 202, 1320, 444, 0xa8acb2);
+floorPoly('Fundo menor / área gourmet', [[95,726],[83,280],[280,269],[280,699]], 0xa9d0aa);
+// A garagem permanece permeável nas laterais; apenas a faixa central é cimentada.
+floorRect('Garagem coberta — 4,00 × 5,60 m', 1124, 202, 1320, 444, 0xa9d0aa);
+groundRect('Faixa central cimentada da garagem', 1152, 202, 1292, 444, concreteMat, 0.06);
 
 const H = 3.0;
 const T = 0.14;
@@ -188,7 +208,6 @@ function wallRaw(x1, y1, x2, y2, h = H, y0 = 0) {
   return o;
 }
 
-// Parede horizontal com vãos reais (portas/janelas) em coordenadas da planta.
 function hWall(y, x1, x2, openings = []) {
   const sorted = openings.slice().sort((a,b) => a[0]-b[0]);
   let cur = x1;
@@ -238,7 +257,6 @@ hWall(428, 612, 853, [[785, 836]]);
 hWall(510, 612, 813);
 vWall(813, 510, 699, [[545, 605]]);
 
-// Vergas dos vãos para manter leitura construtiva correta.
 [[699,386,430],[699,795,843],[410,532,580],[428,785,836]].forEach(v => lintelHorizontal(...v));
 [[369,316,390],[402,642,686],[853,298,350],[853,455,510],[813,545,605]].forEach(v => lintelVertical(...v));
 
@@ -268,7 +286,6 @@ door(402, 664, 44, 90, 'Porta do banheiro social');
 door(813, 575, 60, 90, 'Porta para o pátio interno');
 door(819, 699, 48, 0, 'Porta principal');
 
-// Janela longa claramente indicada na parede inferior do quarto principal.
 function windowHorizontal(y, xa, xb, sill = 1.0, height = 1.05) {
   const a=P(xa,y), b=P(xb,y), w=Math.abs(b.x-a.x);
   meshBox(details, w, height, 0.035, glassMat, (a.x+b.x)/2, sill+height/2, a.z, 'Janela', 'esquadria');
@@ -276,18 +293,66 @@ function windowHorizontal(y, xa, xb, sill = 1.0, height = 1.05) {
 }
 windowHorizontal(428, 658, 760);
 
-// Cobertura principal acompanha a implantação da edificação; desligada por padrão para inspeção interna.
 const roofMat = new THREE.MeshStandardMaterial({ color: 0xf4f4f1, roughness: 0.72, side: THREE.DoubleSide, transparent: true, opacity: 0.96 });
 const mainRoof = meshBox(roof, X(962)-X(270), 0.09, Z(258)-Z(710), roofMat, (X(270)+X(962))/2, H+0.18, (Z(258)+Z(710))/2, 'Cobertura principal', 'cobertura');
 mainRoof.rotation.z = THREE.MathUtils.degToRad(1.5);
 const garageRoof = meshBox(roof, X(1330)-X(1116), 0.08, Z(194)-Z(452), roofMat.clone(), (X(1116)+X(1330))/2, 2.86, (Z(194)+Z(452))/2, 'Cobertura da garagem', 'cobertura');
 garageRoof.rotation.z = THREE.MathUtils.degToRad(1.2);
+
+// Nova cobertura leve para a área gourmet do fundo menor.
+const gourmetRoof = meshBox(roof, X(268)-X(105), 0.07, Z(345)-Z(615), new THREE.MeshStandardMaterial({ color: 0xe8e3d9, roughness: 0.8, side: THREE.DoubleSide, transparent: true, opacity: 0.94 }), (X(105)+X(268))/2, 2.78, (Z(345)+Z(615))/2, 'Cobertura leve da área gourmet', 'cobertura');
+gourmetRoof.rotation.z = THREE.MathUtils.degToRad(1.0);
 roof.visible = false;
 
-// Estrutura simples da garagem de 4,00 x 5,60 m.
+// Estrutura da garagem coberta.
 for (const [px,py] of [[1130,210],[1225,205],[1314,198],[1130,438],[1225,435],[1310,432]]) {
   const p=P(px,py);
   meshBox(details, 0.16, 2.72, 0.16, new THREE.MeshStandardMaterial({color:0xd8d8d5,roughness:.88}), p.x,1.36,p.z,'Pilar da garagem','estrutura');
+}
+
+// Área gourmet no fundo menor: piso, cobertura, bancada, churrasqueira e mesa compacta.
+groundRect('Piso da área gourmet', 108, 350, 266, 612, new THREE.MeshStandardMaterial({ color: 0xd8d2c6, roughness: 0.9 }), 0.065);
+for (const [px,py] of [[112,355],[260,350],[112,606],[260,606]]) {
+  const p=P(px,py);
+  meshBox(details, 0.14, 2.65, 0.14, darkWoodMat, p.x,1.325,p.z,'Pilar da área gourmet','estrutura');
+}
+{
+  const p=P(130,425),g=new THREE.Group();g.position.set(p.x,0,p.z);g.name='Bancada gourmet com churrasqueira';g.userData.kind='área gourmet';
+  meshBox(g,.62,.88,2.65,woodMat,0,.44,0,'Bancada gourmet','mobiliário');
+  meshBox(g,.66,.06,2.72,whiteMat,0,.91,0,'Tampo claro','mobiliário');
+  meshBox(g,.66,1.95,.78,greekMat,0,1.02,-.92,'Churrasqueira','mobiliário');
+  meshBox(g,.69,.50,.10,charcoalMat,.02,1.05,-.51,'Boca da churrasqueira','mobiliário');
+  meshBox(g,.24,.12,.34,whiteMat,.02,.98,.40,'Cuba','mobiliário');
+  meshBox(g,.025,.30,.025,copperMat,.18,1.07,.40,'Torneira de cobre','mobiliário');
+  furniture.add(g);
+}
+{
+  const p=P(205,520),g=new THREE.Group();g.position.set(p.x,0,p.z);g.name='Mesa da área gourmet — 4 lugares';g.userData.kind='mobiliário';
+  meshBox(g,1.35,.10,.78,woodMat,0,.77,0,'Mesa gourmet');
+  for(const [x,z] of [[-.82,0],[.82,0],[0,-.64],[0,.64]]){
+    meshBox(g,.38,.07,.38,darkWoodMat,x,.45,z,'Cadeira gourmet');
+    meshBox(g,.36,.45,.06,darkWoodMat,x,.70,z+(z<0?-.16:.16),'Encosto');
+  }
+  furniture.add(g);
+}
+
+// Portões e acesso. O portão veicular alinha com a garagem; o portão principal é o acesso de pedestres.
+function gateSegment(x1,y1,x2,y2,height,name){
+  const a=P(x1,y1),b=P(x2,y2),len=Math.hypot(b.x-a.x,b.z-a.z);
+  const g=meshBox(details,len,height,.07,metalMat,(a.x+b.x)/2,height/2,(a.z+b.z)/2,name,'acesso');
+  g.rotation.y=-Math.atan2(b.z-a.z,b.x-a.x);
+  return g;
+}
+gateSegment(1160,198,1318,185,1.78,'Portão veicular da garagem');
+gateSegment(1334,545,1337,608,1.78,'Portão principal de pedestres');
+
+// Caminho confortável do portão principal até a porta de entrada, com patamar final.
+const accessPts=[[1328,578],[1222,584],[1115,608],[1010,638],[905,672],[824,692]];
+for(let i=0;i<accessPts.length-1;i++) groundStrip(...accessPts[i],...accessPts[i+1],1.10,pathMat,'Caminho do portão principal à entrada');
+groundRect('Patamar da porta principal', 795, 680, 850, 713, pathMat, 0.07);
+for (const [px,py] of [[1210,590],[1085,618],[965,653],[855,684]]) {
+  const p=P(px,py);
+  meshBox(details,.10,.42,.10,charcoalMat,p.x,.23,p.z,'Balizador do caminho','iluminação externa');
 }
 
 // Quadro elétrico: posição indicada pelo símbolo amarelo na planta, próximo à garagem/portão.
@@ -299,7 +364,6 @@ for (const [px,py] of [[1130,210],[1225,205],[1314,198],[1130,438],[1225,435],[1
   details.add(g);
 }
 
-// Forro branco liso em todas as áreas internas.
 function ceilingRect(x1,y1,x2,y2){
   const w=X(x2)-X(x1), d=Z(y1)-Z(y2);
   const o=meshBox(ceiling,w,.035,d,new THREE.MeshStandardMaterial({color:0xffffff,roughness:.95,transparent:true,opacity:.96,side:THREE.DoubleSide}),(X(x1)+X(x2))/2,2.93,(Z(y1)+Z(y2))/2,'Forro de isopor + massa corrida branca','acabamento');
@@ -310,7 +374,6 @@ ceilingRect(612,269,952,428);
 ceilingRect(612,510,813,699);
 ceiling.visible=false;
 
-// Mobiliário apenas como referência espacial, sem alterar a geometria da planta.
 function diningSet(px,py){
   const p=P(px,py),g=new THREE.Group(); g.position.set(p.x,0,p.z); g.name='Mesa de madeira — 6 lugares'; g.userData.kind='mobiliário';
   meshBox(g,1.90,.10,.90,woodMat,0,.78,0,'Mesa de madeira');
@@ -360,7 +423,6 @@ function vanity(px,py,rot=0){
 vanity(333,655);
 vanity(900,315,Math.PI/2);
 
-// Sofá simples na sala, em posição que não interfere com as circulações da planta.
 {
   const p=P(540,575),g=new THREE.Group();g.position.set(p.x,0,p.z);g.name='Sofá';g.userData.kind='mobiliário';
   meshBox(g,2.00,.35,.78,new THREE.MeshStandardMaterial({color:0xc9c4bc,roughness:.9}),0,.35,0,'Sofá');
@@ -383,15 +445,15 @@ makeLabel('Quarto',733,344);
 makeLabel('Banheiro',901,338);
 makeLabel('Sala / cozinha / jantar',590,558);
 makeLabel('Pátio interno',734,474);
-makeLabel('Garagem 4,00 × 5,60 m',1220,330);
+makeLabel('Área gourmet',188,505);
+makeLabel('Garagem coberta',1220,330);
+makeLabel('Acesso principal',1045,635);
 
-// Pequenas luzes internas opcionais.
 const interiorLights=[];
-for(const [px,py] of [[520,340],[735,345],[575,565],[900,335]]){
+for(const [px,py] of [[520,340],[735,345],[575,565],[900,335],[190,490]]){
   const p=P(px,py);const l=new THREE.PointLight(0xffe7c2,0,7,2);l.position.set(p.x,2.55,p.z);scene.add(l);interiorLights.push(l);
 }
 
-// Plano de solo sutil sob o lote.
 const ground=new THREE.Mesh(new THREE.PlaneGeometry(90,90),new THREE.MeshStandardMaterial({color:0xe7ebee,roughness:1}));
 ground.rotation.x=-Math.PI/2;ground.position.set(10,-.08,4);ground.receiveShadow=true;scene.add(ground);
 
@@ -422,10 +484,9 @@ document.getElementById('toggleLights')?.addEventListener('click',e=>{
   interiorLights.forEach(l=>l.intensity=on?18:0);
 });
 
-const buttons=[...document.querySelectorAll('.row:first-of-type button')];
+const buttons=[...document.querySelectorAll('.viewRow button')];
 buttons.forEach(b=>b.addEventListener('click',()=>{buttons.forEach(x=>x.classList.remove('active'));b.classList.add('active');}));
 
-// Identificação por clique/toque.
 const raycaster=new THREE.Raycaster();
 const pointer=new THREE.Vector2();
 const selection=document.getElementById('selection');
